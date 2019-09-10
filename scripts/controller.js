@@ -1,12 +1,28 @@
 $(document).ready(function() {
     var topic1 = $("#Topic").val();
     $("#btnDisconnect").click(function() {
-        client.end();
         //  $("button").attr("disable", true);
-        alert("session ended");
-        $("#checkStatus").val("Disconnected !");
-        location.reload();
+        Swal.fire({
+            title: 'Are you sure you want to disconnect?',
+            text: "You wont receive any message from the broker!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              Swal.fire(
+                'Disconnect!',
+                'You have been disconnect.',
+                'success',
+                client.end(),
+                location.reload()
+              )
+            }
+          })
     })
+    
     $("#btnConnect").click(function() {
         //$("button").attr("disable", false);
         // console.log($("#Address").val());
@@ -14,7 +30,13 @@ $(document).ready(function() {
 
         client.on("connect", function() {
             $("#checkStatus").val("Connected !");
-            console.log("successfully connected");
+            Swal.fire({
+                position: 'center',
+                type: 'success',
+                title: 'Successfully Connected',
+                showConfirmButton: false,
+                timer: 1500
+              })
         })
         subs = false;
         $("#btnPublish").click(function() {
